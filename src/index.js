@@ -73,6 +73,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
     return response.status(201).json(todo);
 });
 
+// Alterar todo
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     
     // dados da requisição
@@ -95,6 +96,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     return response.status(200).json({ message: "Successfully altered todo" });
 });
 
+// Mudar status done todo
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     
     // dados da requisição
@@ -110,13 +112,25 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     }
 
     // realizando a alteracao
-    todo.done = true
+    todo.done = true;
 
     return response.status(200).json({ message: "Successfully altered todo" });
 });
 
+// deletar todo
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-    // Complete aqui
+    
+    // dados da requisicao
+    const { user } = request;
+    const { id } = request.params;
+
+    // buscar todo pelo id
+    const todo = user.todos.find(todo => todo.id === id)
+
+    // remover todo
+    user.todos.splice(user.todos.indexOf(todo), 1);
+
+    return response.status(200).json({ message: "Todo successfully deleted" });
 });
 
 module.exports = app;
