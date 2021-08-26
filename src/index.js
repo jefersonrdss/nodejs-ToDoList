@@ -18,12 +18,12 @@ function checksExistsUserAccount(request, response, next) {
 
     // caso não existir
     if (!user) {
-        return response.status(400).json({ error: "User not found" })
+        return response.status(400).json({ error: "User not found" });
     }
 
-    request.user = user // inserindo o user dentro do request
+    request.user = user; // inserindo o user dentro do request
 
-    return next()
+    return next();
 }
 
 // Cadastrar usuário
@@ -44,14 +44,33 @@ app.post('/users', (request, response) => {
     return response.status(201).json(newUser);
 });
 
+// buscar lista de todos
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-    
-    const { user } = request
+
+    const { user } = request;
     return response.status(200).json(user.todos);
 });
 
+// Cadastrar todo
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-    // Complete aqui
+    
+    // dados do request
+    const { user } =  request;
+    const { title, deadline } = request.body;
+
+    // criando o objeto todo
+    const todo = {
+        id: uuidv4(),
+        title,
+        done: false,
+        deadline: new Date(deadline),
+        created_at: new Date()
+    };
+
+    // inserindo todo
+    user.todos.push(todo);
+
+    return response.status(201).json(todo);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
