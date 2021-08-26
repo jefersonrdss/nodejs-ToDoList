@@ -93,7 +93,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     
     // caso não exista o todo
     if (!todo) {
-        return response.status(400).json({ error: "Todo not found" });
+        return response.status(404).json({ error: "Todo not found" });
     }
 
     // realizando a alteracao
@@ -115,7 +115,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     
     // caso não exista o todo
     if (!todo) {
-        return response.status(400).json({ error: "Todo not found" });
+        return response.status(404).json({ error: "Todo not found" });
     }
 
     // realizando a alteracao
@@ -133,6 +133,11 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
 
     // buscar todo pelo id
     const todo = user.todos.find(todo => todo.id === id);
+
+    // caso não exista o todo
+    if (!todo) {
+        return response.status(404).json({ error: "Todo not found" });
+    }
 
     // remover todo
     user.todos.splice(user.todos.indexOf(todo), 1);
