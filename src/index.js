@@ -18,7 +18,7 @@ function checksExistsUserAccount(request, response, next) {
 
     // caso não existir
     if (!user) {
-        return response.status(400).json({ error: "User not found" });
+        return response.status(404).json({ error: "User not found" });
     }
 
     request.user = user; // inserindo o user dentro do request
@@ -29,7 +29,14 @@ function checksExistsUserAccount(request, response, next) {
 // Cadastrar usuário
 app.post('/users', (request, response) => {
 
-    const { name, username } = request.body; // dados da requisição
+    // dados da requisição
+    const { name, username } = request.body;
+
+    // Caso usuário já exista
+    const userAlreadyExists = users.find(user => user.username === username);
+    if (userAlreadyExists){
+        return response.status(400).json({ error: "User already exists" });
+    }
 
     // objeto do novo usuario
     const newUser = {
@@ -125,7 +132,7 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
     const { id } = request.params;
 
     // buscar todo pelo id
-    const todo = user.todos.find(todo => todo.id === id)
+    const todo = user.todos.find(todo => todo.id === id);
 
     // remover todo
     user.todos.splice(user.todos.indexOf(todo), 1);
