@@ -9,8 +9,21 @@ app.use(express.json());
 
 const users = []; // lista de usuarios cadastrados
 
+// Middleware para verificar se usuario existe
 function checksExistsUserAccount(request, response, next) {
-  // Complete aqui
+
+    const { username } = request.headers; // pega o username do headers
+
+    const user = users.find(user => user.username === username); // find user com username
+
+    // caso não existir
+    if (!user) {
+        return response.status(400).json({ error: "User not found" })
+    }
+
+    request.user = user // inserindo o user dentro do request
+
+    return next()
 }
 
 // Cadastrar usuário
@@ -32,23 +45,25 @@ app.post('/users', (request, response) => {
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+    
+    const { user } = request
+    return response.status(200).json(user.todos);
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+    // Complete aqui
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+    // Complete aqui
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+    // Complete aqui
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+    // Complete aqui
 });
 
 module.exports = app;
