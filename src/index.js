@@ -100,7 +100,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     todo.title = title;
     todo.deadline = new Date(deadline);
 
-    return response.status(200).json({ message: "Successfully altered todo" });
+    return response.status(200).json(todo);
 });
 
 // Mudar status done todo
@@ -121,7 +121,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     // realizando a alteracao
     todo.done = true;
 
-    return response.status(200).json({ message: "Successfully altered todo" });
+    return response.status(200).json(todo);
 });
 
 // deletar todo
@@ -142,7 +142,7 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
     // remover todo
     user.todos.splice(user.todos.indexOf(todo), 1);
 
-    return response.status(200).json({ message: "Todo successfully deleted" });
+    return response.status(200).json(user.todos);
 });
 
 module.exports = app;
