@@ -96,7 +96,23 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-    // Complete aqui
+    
+    // dados da requisição
+    const { user } = request;
+    const { id } = request.params;
+
+    // buscar o todo com base no id
+    const todo = user.todos.find(todo => todo.id === id);
+    
+    // caso não exista o todo
+    if (!todo) {
+        return response.status(400).json({ error: "Todo not found" });
+    }
+
+    // realizando a alteracao
+    todo.done = true
+
+    return response.status(200).json({ message: "Successfully altered todo" });
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
